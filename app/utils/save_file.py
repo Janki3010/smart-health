@@ -38,3 +38,18 @@ def get_file_path(path: str) -> str:
 
 def get_full_filepath(path):
     return get_temporary_local_storage_path() / path
+
+def delete_stored_file(file_path: str) -> bool:
+    full_path = os.path.join(get_temporary_local_storage_path(), file_path)
+
+    if os.path.exists(full_path) and os.path.isfile(full_path):
+        os.remove(full_path)
+
+        parent_dir = os.path.dirname(full_path)
+
+        if os.path.exists(parent_dir) and not os.listdir(parent_dir):
+            os.rmdir(parent_dir)
+
+        return True
+
+    return False

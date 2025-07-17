@@ -1,3 +1,4 @@
+from app.repository.authentication_repository import AuthenticationRepository
 from app.repository.doctor_repository import DoctorRepository
 from app.schemas.doctor import DrRequest
 
@@ -5,6 +6,7 @@ from app.schemas.doctor import DrRequest
 class DoctorService:
     def __init__(self):
         self.doctor_repository = DoctorRepository()
+        self.user_repository = AuthenticationRepository()
 
     def add_dr_data(self, createRequest: DrRequest):
         return self.doctor_repository.add_data(createRequest)
@@ -20,3 +22,6 @@ class DoctorService:
 
     def delete_data_by_id(self, id: str):
         return self.doctor_repository.delete_data(id)
+
+    def update_role(self, uid: str):
+        return self.user_repository.update_role(uid)

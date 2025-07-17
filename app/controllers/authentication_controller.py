@@ -1,7 +1,7 @@
-from fastapi import Depends, APIRouter
+from fastapi import Depends, APIRouter, Request
 from fastapi_restful.cbv import cbv
 from fastapi import BackgroundTasks
-from fastapi.responses import RedirectResponse
+from fastapi.responses import RedirectResponse, JSONResponse
 from starlette.status import HTTP_201_CREATED, HTTP_200_OK
 
 from app.config.settings import settings
@@ -15,6 +15,7 @@ from app.schemas.authentication import (
 )
 
 from app.services.authentication_service import AuthenticationService
+from app.services.oatuh_service import oauth
 
 auth_router = APIRouter(prefix="/auth", tags=["Authentication"])
 
@@ -62,11 +63,30 @@ class AuthenticationController:
     ):
          self.auth_service.reset_password(token, request)
          return {"message": "Password reset successfully"}
+    #
+    # @auth_router.get("/google-login")
+    # async def google_login(self, request: Request):
+    #     redirect_uri = request.url_for("auth")
+    #     return await oauth.myApp.authorize_redirect(request, redirect_uri)
+    #
+    # @auth_router.get("/signin-google")
+    # async def auth(self, request: Request):
+    #     try:
+    #         token = await oauth.myApp.authorize_access_token(request)
+    #     except:
+    #         pass
+    #     request.session["user"] = token
 
-    # @auth_router.post("/admin/login", response_model=TokenResponse, status_code=HTTP_200_OK, summary="Login user")
-    # def admin_login(
-    #         self,
-    #         user: Login
-    # ):
-    #     access_token = self.auth_service.admin_login(user)
-    #     return {"access_token": access_token, "token_type": "bearer"}
+    # @auth_router.get("/google-login", summary="Redirect to Google for login")
+    # async def signin_google(self, request: Request):
+    #     redirect_uri = str(request.base_url) + "auth/signin-google"
+    #     return await oauth.google.authorize_redirect(request, redirect_uri)
+    #
+    # @auth_router.get("/signin-google", summary="Googles login callback")
+    # async def auth(self, request: Request):
+    #     token = await oauth.google.authorize_access_token(request)
+    #     user_info = await oauth.google.parse_id_token(request, token)
+    #
+    #     # user = self.auth_service.google_login(user_info)
+    #     return JSONResponse(content={"user": user_info})
+    #

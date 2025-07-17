@@ -1,6 +1,7 @@
 from app.models.appointment import Appointment, AppointmentStatus
 from app.repository.base_repository import BaseRepository
-from app.schemas.appointments import AppointmentRequest
+from app.schemas.appointments import AppointmentRequest, RescheduleAppointment
+
 
 class AppointmentRepository(BaseRepository):
     def __init__(self):
@@ -23,8 +24,14 @@ class AppointmentRepository(BaseRepository):
     def update_status(self, appointment_id: str, status: AppointmentStatus):
         return self.update_by_id(appointment_id, {"status": status})
 
-    def get_appointment_history(self, id: str):
-        return self.get_by_filters({'patient_id': id})
+    def get_appointments(self, app_id):
+        return self.get_by_id({'id': app_id})
 
-    def get_appointments(self, doc_id: str):
-        return self.get_by_filters({'doctor_id': doc_id})
+    def get_appointment_history(self, id: str):
+        return self.get_all({'patient_id': id})
+
+    def get_appointments_doc(self, doc_id: str):
+        return self.get_all({'doctor_id': doc_id})
+
+    def update_appointment_time(self, reschedule_request: RescheduleAppointment):
+        return self.update_by_id(reschedule_request.appointment_id, {"appointment_time": reschedule_request.appointment_time, "status": AppointmentStatus.PENDING})

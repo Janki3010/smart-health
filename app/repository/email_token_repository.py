@@ -26,7 +26,7 @@ class EmailTokenRepository(BaseRepository):
         return self.get_by_filters(
             {"token": token, "type": token_type},
             options=joinedload(EmailToken.user)
-        )[0]
+        )
 
     def delete_existing_password_reset_tokens(self, user_id: uuid.UUID):
         """Delete all previous reset password tokens for a user."""

@@ -28,8 +28,7 @@ class DoctorController:
         if not user_data:
             raise HTTPException(status_code=401, detail="Invalid authentication token")
 
-        # if user_data["email"] != "Junnu@gmail.com":
-        if user_data["email"] != "suga@example.com":
+        if user_data["email"] != "Junnu@gmail.com":
             raise HTTPException(status_code=401, detail="You don't have access to add the data")
 
         return self.doctor_service.add_dr_data(createRequest)
@@ -63,8 +62,8 @@ class DoctorController:
             request: Request
     ):
         user_data = getattr(request.state, "user", None)
-        # if user_data["email"] != "junnu@gmail.com":
-        if user_data["email"] != "suga@example.com":
+
+        if user_data["email"] != "junnu@gmail.com":
             raise HTTPException(status_code=401, detail="You don't have access to update the data")
 
         return self.doctor_service.update_data_by_id(id, update_request)
@@ -77,9 +76,21 @@ class DoctorController:
     def delete_by_id(self, id: str, request: Request):
         user_data = getattr(request.state, "user", None)
 
-        if user_data["email"] != "suga@example.com":
+        if user_data["email"] != "junnu@gmail.com":
             raise HTTPException(status_code=401, detail="You don't have access to delete the data")
 
         return self.doctor_service.delete_data_by_id(id)
 
+    @dr_router.put(
+        "/approve-doctor",
+        status_code=HTTP_200_OK,
+        summary="Approve the doctor"
+    )
+    def approve(self, request: Request, uid: str):
+        user_data = getattr(request.state, "user", None)
+
+        if user_data["email"] != "junnu@gmail.com":
+           raise HTTPException(status_code=401, detail="You don't have an access to approve doctor")
+
+        return self.doctor_service.update_role(uid)
 

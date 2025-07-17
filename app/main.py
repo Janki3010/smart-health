@@ -6,13 +6,16 @@ from slowapi.errors import RateLimitExceeded
 from slowapi.middleware import SlowAPIMiddleware
 from slowapi.util import get_remote_address
 
+from app.chatbot import chat_router
 from app.controllers.appointment_controller import appointment_router
 from app.controllers.authentication_controller import auth_router
+from app.controllers.chatbot_controller import chatbot_router
 from app.controllers.doctor_controller import dr_router
 from app.controllers.prediction_controller import prediction_router
 from app.controllers.user_controller import user_router
 from app.middleware.auth_middleware import AuthMiddleware
 from app.middleware.custom_openapi import CustomOpenAPI
+from app.config.settings import settings
 
 limiter = Limiter(key_func=get_remote_address, default_limits=["1/seconds"])
 
@@ -40,6 +43,7 @@ app.include_router(user_router)
 app.include_router(dr_router)
 app.include_router(appointment_router)
 app.include_router(prediction_router)
+app.include_router(chatbot_router)
 
 # Initialize and set custom OpenAPI
 custom_openapi = CustomOpenAPI(app)

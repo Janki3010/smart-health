@@ -1,10 +1,12 @@
-from sqlalchemy import Column, String, Boolean, ForeignKey, Text, TIMESTAMP
+from sqlalchemy import Column, String, Boolean, ForeignKey, Text, TIMESTAMP, Enum
 from sqlalchemy.orm import relationship
 from sqlalchemy.dialects.postgresql import UUID
 from datetime import datetime
 import uuid
 
 from app.models.base import BaseModel
+from app.schemas.authentication import RoleEnum
+
 
 class User(BaseModel):
     __tablename__ = "users"
@@ -14,6 +16,7 @@ class User(BaseModel):
     email = Column(String(255), unique=True, nullable=False)
     hashed_password = Column(Text, nullable=False)
     is_verified = Column(Boolean, default=False)
+    role = Column(String(7), default="user")
     created_at = Column(TIMESTAMP, default=datetime.utcnow)
     updated_at = Column(TIMESTAMP, default=datetime.utcnow, onupdate=datetime.utcnow)
 

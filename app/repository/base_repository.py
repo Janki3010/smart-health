@@ -59,7 +59,7 @@ class BaseRepository:
                 query = query.options(options)
             for key, value in filters.items():
                 query = query.filter(getattr(model, key) == value)
-            return query.all()
+            return query.first()
 
     def update_by_id(self, id, data):
         with get_db() as db:

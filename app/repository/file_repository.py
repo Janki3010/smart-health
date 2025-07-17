@@ -1,7 +1,7 @@
 from app.models.medical_report import MedicalReport
 from app.repository.base_repository import BaseRepository
 
-class UploadFileRepository(BaseRepository):
+class FileRepository(BaseRepository):
     def __init__(self):
         super().__init__(MedicalReport)
 

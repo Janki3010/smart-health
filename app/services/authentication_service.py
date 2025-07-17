@@ -32,15 +32,20 @@ class AuthenticationService:
 
         hashed_pwd = hash_password(user.password)
 
+        if user.role == 'doctor':
+            role = 'pending_doctor'
+        else:
+            role = 'user'
+
         if existing_user:
             if not existing_user.is_verified:
-                update_user = self.auth_repository.update_data(existing_user.id, user.name, normalized_email, hashed_pwd)
+                update_user = self.auth_repository.update_data(existing_user.id, user.name, normalized_email, hashed_pwd, role)
                 if update_user:
                     new_user = self.auth_repository.get_user_by_email(normalized_email)
                 else:
                     raise HTTPException(status_code=500, detail="Failed to update unverified user")
         else:
-            new_user = self.auth_repository.create_user(user.name, normalized_email, hashed_pwd)
+            new_user = self.auth_repository.create_user(user.name, normalized_email, hashed_pwd, role)
 
         if not new_user:
             raise HTTPException(status_code=500, detail="User creation failed")
@@ -73,7 +78,8 @@ class AuthenticationService:
             raise HTTPException(status_code=403, detail="Please verify your email first")
         user_id = str(db_user.id)
         email = str(db_user.email)
-        access_token = create_access_token(user_id, email)
+        role = str(db_user.role)
+        access_token = create_access_token(user_id, email, role)
 
         return access_token
 
